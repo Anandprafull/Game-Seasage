@@ -1,25 +1,7 @@
 const canvas = document.getElementById("canvas")
+canvas.width = innerWidth
+canvas.height = innerHeight
 const c = canvas.getContext("2d")
-
-// Resize canvas to fit browser window
-function resizeCanvas() {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-    // Optionally, you can call this to redraw the background if needed
-    // c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-}
-
-// Set initial canvas size
-resizeCanvas()
-
-// Handle window resize event
-window.addEventListener("resize", resizeCanvas)
-
-const backgroundImage = new Image();
-backgroundImage.src = "./Assets/Bg/Background.png"; // Replace with the path to your background image
-backgroundImage.onload = function() {
-    main(); // Start the game loop only after the image has loaded
-};
 
 //#region [Classes]
 class Draw {
@@ -204,27 +186,21 @@ window.addEventListener("keyup", (e) => {
 //#endregion
 
 //#region [Setting up Garbages]
-const Garbages = new Array();
-Garbages[0] = new Garbage(0, 0, 85, 234 * 0.5, 22, 0, 100, 234, "./Assets/Garbages/bottle.png", 0.5, Math.PI / 6, "Bottle");
-Garbages[1] = new Garbage(0, 0, 55, 38, 20, -12, 100, 422, "./Assets/Garbages/cigarette.png", 0.15, -Math.PI / 3, "Cigarette");
-Garbages[2] = new Garbage(0, 0, 82, 66, 15, -10, 100, 181, "./Assets/Garbages/coffee_cup.png", 0.5, -Math.PI / 3, "Coffee Cup");
-Garbages[3] = new Garbage(0, 0, 80, 60, 20, -15, 100, 200, "./Assets/Garbages/plastic_bag.png", 0.4, -Math.PI / 4, "Plastic Bag");
-Garbages[4] = new Garbage(0, 0, 90, 80, 30, -25, 100, 150, "./Assets/Garbages/food_packaging.png", 0.5, Math.PI / 6, "Food Packaging");
-Garbages[5] = new Garbage(0, 0, 85, 200, 30, -20, 100, 400, "./Assets/Garbages/household_cleaner_bottle.png", 0.6, -Math.PI / 6, "Household Cleaner Bottle");
-Garbages[6] = new Garbage(0, 0, 60, 100, 20, -15, 100, 150, "./Assets/Garbages/mask.png", 0.3, -Math.PI / 2, "Mask");
-Garbages[7] = new Garbage(0, 0, 60, 90, 25, -10, 100, 200, "./Assets/Garbages/tooth_brush.png", 0.3, Math.PI / 4, "Tooth Brush");
-Garbages[8] = new Garbage(0, 0, 80, 80, 30, -20, 100, 150, "./Assets/Garbages/yogurt_cup.png", 0.4, -Math.PI / 3, "Yogurt Cup");
-
+const Garbages = new Array()
+Garbages[0] = new Garbage(0, 0, 85, 234 * 0.5, 22, 0, 100, 234, "./Assets/Garbages/bottle.png", 0.5, Math.PI / 6, "Bottle")
+Garbages[1] = new Garbage(0, 0, 55, 38, 20, -12, 100, 422, "./Assets/Garbages/cigarette.png", 0.15, -Math.PI / 3, "Cigarette")
+Garbages[2] = new Garbage(0, 0, 82, 66, 15, -10, 100, 181, "./Assets/Garbages/coffee_cup.png", 0.5, -Math.PI / 3, "CoffeeCup")
 for (let i = 0; i < Garbages.length; i++) {
     let x;
     let y;
-    x = Math.random() * (canvas.width - Garbages[i].width);
+    x = Math.random() * (canvas.width - Garbages[i].width)
     if (x < 230) {
-        y = Math.random() * (canvas.height - Garbages[i].height - 199) + 200;
-    } else {
-        y = Math.random() * (canvas.height - Garbages[i].height);
+        y = Math.random() * (canvas.height - Garbages[i].height - 199) + 200
     }
-    Garbages[i].translate(x, y);
+    else {
+        y = Math.random() * (canvas.height - Garbages[i].height)
+    }
+    Garbages[i].translate(x, y)
 }
 //#endregion
 
@@ -251,6 +227,7 @@ ignore.addEventListener("click", () => {
     movementInput.left.down = false
     movementInput.right.down = false
 })
+
 //#endregion
 
 //#region [Smartphone controls]
@@ -293,6 +270,7 @@ if (isSmartphone()) {
     left.style.display = "none"
     right.style.display = "none"
 }
+
 //#endregion
 
 const player = new Player(10, 10, 220, 84 * 2, 15, 50, 100, 50, "./Assets/DiverFrames.png", 10, 20, 2)
@@ -312,49 +290,47 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
-function main(currentTime = 0) {
+function main(currentTime) {
     currentTime *= 0.1;
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
-
-    c.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-
-    // Draw background image
-    c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-    // Drawing game elements
-    c.save();
-    // c.fillStyle = "rgb(1 95 108)";
-    // c.fillRect(0, 0, canvas.width, canvas.height);
-    c.restore();
-
+    c.clearRect(0, 0, canvas.width, canvas.height)
+    c.save()
+    c.fillStyle = "rgb(1 95 108)"
+    c.fillRect(0, 0, canvas.width, canvas.height)
+    c.restore()
     if (playable) {
-        playerMovement();
+        playerMovement()
     }
-    collisionDetection();
+    collisionDetection()
     for (let i = 0; i < Garbages.length; i++) {
-        Garbages[i].draw();
+        Garbages[i].draw()
     }
     if (playable) {
         if (player.AnimController.up) {
-            player.up(player.restDirection);
-        } else if (player.AnimController.down) {
-            player.down(player.restDirection);
-        } else if (player.AnimController.right) {
-            player.idle(player.restDirection);
-        } else if (player.AnimController.left) {
-            player.idle(player.restDirection);
-        } else {
-            player.idle(player.restDirection);
+            player.up(player.restDirection)
         }
-    } else {
-        player.idle(playable.restDirection);
+        else if (player.AnimController.down) {
+            player.down(player.restDirection)
+        }
+        else if (player.AnimController.right) {
+            player.idle(player.restDirection)
+        }
+        else if (player.AnimController.left) {
+            player.idle(player.restDirection)
+        }
+        else {
+            player.idle(player.restDirection)
+        }
+    }
+    else {
+        player.idle(playable.restDirection)
     }
     c.fillStyle = "white";
     c.fillText("Score: " + score, 10, 50); // Display score
-
-    requestAnimationFrame(main); // Request next frame
+    requestAnimationFrame(main)
 }
+main(0)
 
 function playerMovement() {
     // Moving Player
@@ -410,13 +386,13 @@ function playerMovement() {
 function collisionDetection() {
     // Collision Detection
     for (let i = 0; i < Garbages.length; i++) {
-        for (let j = 0; j < Garbages.length; j++) {
-            if (!((player.x + player.width < Garbages[j].x) || (player.x > Garbages[j].x + Garbages[j].width) || (player.y + player.height < Garbages[j].y) || (player.y > Garbages[j].y + Garbages[j].height))) {
-                c.fillText("colliding with " + Garbages[j].name, 100, 50 * j + 100)
+        for (let i = 0; i < Garbages.length; i++) {
+            if (!((player.x + player.width < Garbages[i].x) || (player.x > Garbages[i].x + Garbages[i].width) || (player.y + player.height < Garbages[i].y) || (player.y > Garbages[i].y + Garbages[i].height))) {
+                c.fillText("collding with " + Garbages[i].name, 100, 50 * i + 100)
                 box.style.display = "flex"
                 playable = false
-                info.innerText = Garbages[j].name
-                Garbages.splice(j, 1);
+                info.innerText = Garbages[i].name
+                Garbages.splice(i, 1);
                 score += 10; // Update score
                 break;
             }

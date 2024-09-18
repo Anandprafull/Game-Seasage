@@ -1,19 +1,7 @@
 const canvas = document.getElementById("canvas")
+canvas.width = innerWidth
+canvas.height = innerHeight
 const c = canvas.getContext("2d")
-
-// Resize canvas to fit browser window
-function resizeCanvas() {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-    // Optionally, you can call this to redraw the background if needed
-    // c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-}
-
-// Set initial canvas size
-resizeCanvas()
-
-// Handle window resize event
-window.addEventListener("resize", resizeCanvas)
 
 const backgroundImage = new Image();
 backgroundImage.src = "./Assets/Bg/Background.png"; // Replace with the path to your background image
@@ -251,6 +239,7 @@ ignore.addEventListener("click", () => {
     movementInput.left.down = false
     movementInput.right.down = false
 })
+
 //#endregion
 
 //#region [Smartphone controls]
@@ -293,6 +282,7 @@ if (isSmartphone()) {
     left.style.display = "none"
     right.style.display = "none"
 }
+
 //#endregion
 
 const player = new Player(10, 10, 220, 84 * 2, 15, 50, 100, 50, "./Assets/DiverFrames.png", 10, 20, 2)
@@ -410,13 +400,13 @@ function playerMovement() {
 function collisionDetection() {
     // Collision Detection
     for (let i = 0; i < Garbages.length; i++) {
-        for (let j = 0; j < Garbages.length; j++) {
-            if (!((player.x + player.width < Garbages[j].x) || (player.x > Garbages[j].x + Garbages[j].width) || (player.y + player.height < Garbages[j].y) || (player.y > Garbages[j].y + Garbages[j].height))) {
-                c.fillText("colliding with " + Garbages[j].name, 100, 50 * j + 100)
+        for (let i = 0; i < Garbages.length; i++) {
+            if (!((player.x + player.width < Garbages[i].x) || (player.x > Garbages[i].x + Garbages[i].width) || (player.y + player.height < Garbages[i].y) || (player.y > Garbages[i].y + Garbages[i].height))) {
+                c.fillText("collding with " + Garbages[i].name, 100, 50 * i + 100)
                 box.style.display = "flex"
                 playable = false
-                info.innerText = Garbages[j].name
-                Garbages.splice(j, 1);
+                info.innerText = Garbages[i].name
+                Garbages.splice(i, 1);
                 score += 10; // Update score
                 break;
             }
