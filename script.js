@@ -16,7 +16,7 @@ resizeCanvas()
 window.addEventListener("resize", resizeCanvas)
 
 const backgroundImage = new Image();
-backgroundImage.src = "./Assets/Bg/Background.png"; // Replace with the path to your background image
+backgroundImage.src = "./Assets/Bg/bgtwo.png"; // Replace with the path to your background image
 backgroundImage.onload = function() {
     main(); // Start the game loop only after the image has loaded
 };
@@ -295,7 +295,7 @@ if (isSmartphone()) {
 }
 //#endregion
 
-const player = new Player(10, 10, 220, 84 * 2, 15, 50, 100, 50, "./Assets/DiverFrames.png", 10, 20, 2)
+const player = new Player(10, 10, 110, 42 * 2, 15, 50, 100, 50, "./Assets/DiverFrames.png", 10, 20, 1.5)
 const playerSpeed = 4
 
 let playable = true
