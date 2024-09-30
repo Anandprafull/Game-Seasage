@@ -304,6 +304,7 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
+//#region [Main Function]
 function main(currentTime = 0) {
     currentTime *= 0.1;
     deltaTime = currentTime - lastTime;
@@ -343,7 +344,7 @@ function main(currentTime = 0) {
     c.fillText("Score: " + score, 10, 50); // Display score
     requestAnimationFrame(main); // Request next frame
 }
-
+//#endregion
 
 function playerMovement() {
     // Moving Player
@@ -396,8 +397,6 @@ function playerMovement() {
     }
 }
 
-
-
 // Function to reinitialize all garbage items
 function initializeGarbages() {
     Garbages.push(
@@ -433,6 +432,25 @@ function generateGarbageItems() {
     });
 }
 
+// Garbage info content
+const garbageInfo = {
+    "Bottle": "Plastic bottles can take up to 450 years to decompose, polluting our oceans and harming marine life.",
+    "Cigarette": "Cigarette butts are the most littered item in the world and can take up to 10 years to decompose.",
+    "Coffee Cup": "Coffee cups are often made with plastic lining, making them non-recyclable and harmful to the environment.",
+    "Plastic Bag": "Plastic bags can take hundreds of years to decompose and are a significant threat to wildlife.",
+    "Food Packaging": "Food packaging waste contributes to landfill overflow and can release toxic substances into the environment.",
+    "Household Cleaner Bottle": "Cleaning product containers can leach harmful chemicals into soil and water if not disposed of properly.",
+    "Mask": "Disposable masks can take hundreds of years to decompose, contributing to ocean pollution.",
+    "Tooth Brush": "Plastic toothbrushes are often not recyclable and contribute to plastic pollution.",
+    "Yogurt Cup": "Yogurt cups can take hundreds of years to decompose, contributing to landfill waste."
+};
+
+function showPopup(garbageName) {
+    const infoText = garbageInfo[garbageName] || "Unknown item.";
+    box.style.display = "block"; // Show the popup box
+    info.innerHTML = `You collected a ${garbageName}!<br>${infoText}`; // Display item and info
+}   
+
 // Modify `collisionDetection()` function to remove the item once collected and check if all items are collected
 function collisionDetection() {
     for (let i = 0; i < Garbages.length; i++) {
@@ -444,8 +462,8 @@ function collisionDetection() {
         ) {
             // Show information box and pause game
             playable = false;
-            box.style.display = "block";
-            info.textContent = "You collected: " + Garbages[i].name;
+
+            showPopup(Garbages[i].name); // Call the popup function
 
             // Remove the collected garbage item from the array
             Garbages.splice(i, 1);
@@ -461,7 +479,6 @@ function collisionDetection() {
 const resetButton = document.getElementById("reset"); // Assuming you have a button with id 'reset'
 resetButton.addEventListener("click", resetGame);
 
-
 // Function to display the reset button when all items are collected
 function checkAllCollected() {
     if (Garbages.length === 0) { // If all garbage items are collected
@@ -474,7 +491,6 @@ function checkAllCollected() {
 function resetGame() {
     window.location.reload(); // This will reload the webpage
 }
-
 
 // Call this function when the reset button is clicked
 resetButton.addEventListener("click", () => {
