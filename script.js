@@ -233,23 +233,15 @@ c.font = "40px san"
 const box = document.getElementById("box")
 const info = document.getElementById("info")
 const collect = document.getElementById("collect")
-const ignore = document.getElementById("ignore")
 box.style.display = "none"
+
 collect.addEventListener("click", () => {
-    box.style.display = "none"
-    playable = true
-    movementInput.down.down = false
-    movementInput.up.down = false
-    movementInput.left.down = false
-    movementInput.right.down = false
-})
-ignore.addEventListener("click", () => {
-    box.style.display = "none"
-    playable = true
-    movementInput.down.down = false
-    movementInput.up.down = false
-    movementInput.left.down = false
-    movementInput.right.down = false
+    box.style.display = "none";
+    playable = true;
+    movementInput.down.down = false;
+    movementInput.up.down = false;
+    movementInput.left.down = false;
+    movementInput.right.down = false;
 })
 //#endregion
 
@@ -318,43 +310,40 @@ function main(currentTime = 0) {
     lastTime = currentTime;
 
     c.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-
-    // Draw background image
-    c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-    // Drawing game elements
-    c.save();
-    // c.fillStyle = "rgb(1 95 108)";
-    // c.fillRect(0, 0, canvas.width, canvas.height);
-    c.restore();
+    c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height); // Draw background
 
     if (playable) {
-        playerMovement();
+        playerMovement(); // Handle player movement
     }
-    collisionDetection();
+
+    collisionDetection(); // Handle collisions
+
     for (let i = 0; i < Garbages.length; i++) {
-        Garbages[i].draw();
+        Garbages[i].draw(); // Draw garbage items
     }
+
     if (playable) {
-        if (player.AnimController.up) {
+        // Handle animations based on direction
+        if (movementInput.up.down) {
             player.up(player.restDirection);
-        } else if (player.AnimController.down) {
+        } else if (movementInput.down.down) {
             player.down(player.restDirection);
-        } else if (player.AnimController.right) {
+        } else if (movementInput.left.down) {
             player.idle(player.restDirection);
-        } else if (player.AnimController.left) {
+        } else if (movementInput.right.down) {
             player.idle(player.restDirection);
         } else {
             player.idle(player.restDirection);
         }
     } else {
-        player.idle(playable.restDirection);
+        player.idle(player.restDirection);
     }
+
     c.fillStyle = "white";
     c.fillText("Score: " + score, 10, 50); // Display score
-
     requestAnimationFrame(main); // Request next frame
 }
+
 
 function playerMovement() {
     // Moving Player
@@ -407,19 +396,87 @@ function playerMovement() {
     }
 }
 
-function collisionDetection() {
-    // Collision Detection
+
+
+// Function to reinitialize all garbage items
+function initializeGarbages() {
+    Garbages.push(
+        new Garbage(0, 0, 85, 234 * 0.5, 22, 0, 100, 234, "./Assets/Garbages/bottle.png", 0.5, Math.PI / 6, "Bottle"),
+        new Garbage(0, 0, 55, 38, 20, -12, 100, 422, "./Assets/Garbages/cigarette.png", 0.15, -Math.PI / 3, "Cigarette"),
+        new Garbage(0, 0, 82, 66, 15, -10, 100, 181, "./Assets/Garbages/coffee_cup.png", 0.5, -Math.PI / 3, "Coffee Cup"),
+        new Garbage(0, 0, 80, 60, 20, -15, 100, 200, "./Assets/Garbages/plastic_bag.png", 0.4, -Math.PI / 4, "Plastic Bag"),
+        new Garbage(0, 0, 90, 80, 30, -25, 100, 150, "./Assets/Garbages/food_packaging.png", 0.5, Math.PI / 6, "Food Packaging"),
+        new Garbage(0, 0, 85, 200, 30, -20, 100, 400, "./Assets/Garbages/household_cleaner_bottle.png", 0.6, -Math.PI / 6, "Household Cleaner Bottle"),
+        new Garbage(0, 0, 60, 100, 20, -15, 100, 150, "./Assets/Garbages/mask.png", 0.3, -Math.PI / 2, "Mask"),
+        new Garbage(0, 0, 60, 90, 25, -10, 100, 200, "./Assets/Garbages/tooth_brush.png", 0.3, Math.PI / 4, "Tooth Brush"),
+        new Garbage(0, 0, 80, 80, 30, -20, 100, 150, "./Assets/Garbages/yogurt_cup.png", 0.4, -Math.PI / 3, "Yogurt Cup")
+    );
+
     for (let i = 0; i < Garbages.length; i++) {
-        for (let j = 0; j < Garbages.length; j++) {
-            if (!((player.x + player.width < Garbages[j].x) || (player.x > Garbages[j].x + Garbages[j].width) || (player.y + player.height < Garbages[j].y) || (player.y > Garbages[j].y + Garbages[j].height))) {
-                c.fillText("colliding with " + Garbages[j].name, 100, 50 * j + 100)
-                box.style.display = "flex"
-                playable = false
-                info.innerText = Garbages[j].name
-                Garbages.splice(j, 1);
-                score += 10; // Update score
-                break;
-            }
+        let x = Math.random() * (canvas.width - Garbages[i].width);
+        let y = x < 230 ? Math.random() * (canvas.height - Garbages[i].height - 199) + 200 : Math.random() * (canvas.height - Garbages[i].height);
+        Garbages[i].translate(x, y);
+    }
+}
+
+// Add this function to generate and position garbage items
+function generateGarbageItems() {
+    Garbages.forEach((garbage, index) => {
+        let x, y;
+        x = Math.random() * (canvas.width - garbage.width);
+        if (x < 230) {
+            y = Math.random() * (canvas.height - garbage.height - 199) + 200;
+        } else {
+            y = Math.random() * (canvas.height - garbage.height);
+        }
+        garbage.translate(x, y); // Reset position
+    });
+}
+
+// Modify `collisionDetection()` function to remove the item once collected and check if all items are collected
+function collisionDetection() {
+    for (let i = 0; i < Garbages.length; i++) {
+        if (
+            player.imgX < Garbages[i].imgX + Garbages[i].width &&
+            player.imgX + player.width > Garbages[i].imgX &&
+            player.imgY < Garbages[i].imgY + Garbages[i].height &&
+            player.height + player.imgY > Garbages[i].imgY
+        ) {
+            // Show information box and pause game
+            playable = false;
+            box.style.display = "block";
+            info.textContent = "You collected: " + Garbages[i].name;
+
+            // Remove the collected garbage item from the array
+            Garbages.splice(i, 1);
+            score+=10;
+
+            // Check if all items are collected
+            checkAllCollected();
+            break;
         }
     }
 }
+
+const resetButton = document.getElementById("reset"); // Assuming you have a button with id 'reset'
+resetButton.addEventListener("click", resetGame);
+
+
+// Function to display the reset button when all items are collected
+function checkAllCollected() {
+    if (Garbages.length === 0) { // If all garbage items are collected
+        resetButton.style.display = "block"; // Show the reset button
+        playable = false; // Disable player movement
+    }
+}
+
+// Function to reset the game state
+function resetGame() {
+    window.location.reload(); // This will reload the webpage
+}
+
+
+// Call this function when the reset button is clicked
+resetButton.addEventListener("click", () => {
+    resetGame();
+});
